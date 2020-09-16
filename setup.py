@@ -17,7 +17,7 @@ with open(HERE / 'README.md') as f:
 	README = f.read()
 
 setuptools.setup(
-	name='pythonpy-clone',
+	name='ps3-update-dl',
 	author='io mintz',
 	url='https://github.com/iomintz/ps3-update-dl',
 	version=VERSION,
@@ -27,6 +27,7 @@ setuptools.setup(
 	long_description=README,
 	long_description_content_type='text/markdown; variant=GFM',
 	install_requires=['requests>=2.23.0,<3.0.0'],
+	extras_requires=[{'dev': ['pytest>=6.0.2,<7.0.0']}],
 	python_requires='>=3.7.0',
 	classifiers=[
 		'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
