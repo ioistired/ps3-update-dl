@@ -3,10 +3,11 @@ language: python
 jobs:
   include:
     - services: docker
+      language: python
     - os: osx
-      language: shell
+      language: python
     - os: windows
-      language: shell
+      language: python
 env:
   global:
     - TWINE_USERNAME=__token__
