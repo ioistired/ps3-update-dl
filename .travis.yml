@@ -20,7 +20,7 @@ script:
   - python3 -m pytest tests.py
 after_success:
   - |
-    if [[ $TRAVIS_TAG ]]; then
+    if [[ x$TRAVIS_TAG != x ]] && [[ x$TRAVIS_PYTHON_VERSION = x3.7 ]]; then
       python3 -m pip install twine
       ./setup.py sdist bdist_wheel
       python3 -m twine upload dist/*.whl
