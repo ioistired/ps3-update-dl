@@ -1,5 +1,7 @@
 # ps3-update-dl
 
+[![Build Status](https://img.shields.io/travis/iomintz/ps3-update-dl/trunk.svg?label=tests)](https://travis-ci.org/iomintz/ps3-update-dl)
+
 Downloads all updates for a given title directly from the PlayStation servers.
 
 ## License
