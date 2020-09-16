@@ -142,7 +142,7 @@ def download_updates(*, base_dir: Path, title_id: str, overwrite=False):
 USAGE = """\
 Usage: ps3udl -o BASE_DIR TITLE_ID_1 [TITLE_ID_2...]
 
-Download all updates for a given title to the given base directory.
+Download all updates for all given titles to the given base directory.
 A subdirectory inside the base directory will be created for each title.
 
 Options:

@@ -4,6 +4,35 @@
 
 Downloads all updates for a given title directly from the PlayStation servers.
 
+## Installation
+
+[`pipx`](https://pipxproject.github.io/pipx/) is the recommended way to install ps3-update-dl.
+
+```
+$ pipx install ps3-update-dl
+```
+
+Afterwards, the command will be available as `ps3udl`.
+
+## Usage
+
+```
+Usage: ps3udl -o BASE_DIR TITLE_ID_1 [TITLE_ID_2...]
+
+Download all updates for all given titles to the given base directory.
+A subdirectory inside the base directory will be created for each title.
+
+Options:
+    -o, --base-dir
+    The directory that all titles will be downloaded to. It must exist.
+
+    -f, --force
+    Whether to overwrite existing files.
+
+    -h, --help
+    Display this message.
+```
+
 ## License
 
 © io mintz <io@mintz.cc>
