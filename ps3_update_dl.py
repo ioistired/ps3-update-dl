@@ -2,6 +2,7 @@
 
 __version__ = '0.0.0'
 
+import pkg_resources
 import xml.etree.ElementTree as et
 from dataclasses import dataclass, field
 from typing import List, Tuple
@@ -14,6 +15,7 @@ import urllib3.connection
 warnings.filterwarnings('ignore', category=urllib3.connection.SubjectAltNameWarning)
 
 URL_FORMAT = 'https://a0.ww.np.dl.playstation.net/tpl/np/{id}/{id}-ver.xml'
+PLAYSTATION_CA_PATH = pkg_resources.resource_filename('ps3_update_dl', 'playstation-ca.crt')
 
 @dataclass
 class Update:
@@ -39,5 +41,5 @@ def parse_updates(tree: et.ElementTree) -> Info:
 	)
 
 def download_info(title_id: str) -> Info:
-	r = requests.get(URL_FORMAT.format(id=title_id), verify='playstation-ca.crt')
+	r = requests.get(URL_FORMAT.format(id=title_id), verify=PLAYSTATION_CA_PATH)
 	return parse_updates(et.fromstring(r.text))
