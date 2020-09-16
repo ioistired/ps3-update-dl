@@ -2,11 +2,8 @@ dist: bionic
 language: python
 jobs:
   include:
-    - services: docker
-      language: python
-    - os: osx
-      language: python
-    - os: windows
+    - os: linux
+      services: docker
       language: python
 env:
   global:
