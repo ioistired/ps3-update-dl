@@ -1,8 +1,8 @@
+*.pkg
+
 .venv
 venv
 __pycache__
-*.py[cod]
-.coveragerc
 .pytest_cache/
 *.egg-info/
 build/
