@@ -16,8 +16,8 @@ python:
   - 3.8
   - 3.9-dev
 install:
-  - pip install -U setuptools pip wheel
-  - pip install -e .[dev]
+  - python3 -m pip install -U setuptools pip wheel
+  - python3 -m pip install -e .[dev]
 script:
   - pytest tests.py
 after_success:
