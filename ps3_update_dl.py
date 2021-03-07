@@ -13,6 +13,7 @@ import xml.etree.ElementTree as et
 from pathlib import Path, PurePosixPath
 from dataclasses import dataclass, field
 from typing import List, Tuple, TYPE_CHECKING
+import logging
 
 if TYPE_CHECKING:
 	from typing import Literal
@@ -37,8 +38,7 @@ except TypeError:
 else:
 	sha1 = partial(hashlib.sha1, usedforsecurity=False)
 
-session = requests.Session()
-session.verify = pkg_resources.resource_filename('ps3_update_dl', 'playstation-ca.crt')
+playstation_ca = pkg_resources.resource_filename('ps3_update_dl', 'playstation-ca.crt')
 
 @dataclass
 class Update:
@@ -64,7 +64,15 @@ def parse_updates(tree: et.ElementTree) -> Info:
 	)
 
 def download_info(title_id: str) -> Info:
-	r = session.get(URL_FORMAT.format(id=title_id))
+	url = URL_FORMAT.format(id=title_id)
+	requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.SubjectAltNameWarning)
+	requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
+	try:
+		r = requests.get(url, verify=playstation_ca)
+	except requests.exceptions.ConnectionError:
+		logging.warning('Connection to Sony cannot get verified')
+		r = requests.get(url, verify=False)
+
 	r.raise_for_status()
 	return parse_updates(et.fromstring(r.text))
 
@@ -107,7 +115,16 @@ def download_update(*, output_dir: Path, update: Update, overwrite=False):
 		mode = 'wb'
 
 	with open(output_path, mode) as f:
-		r = session.get(update.url, headers=headers, stream=True)
+		#r = session.get(update.url, headers=headers, stream=True)
+		url = update.url
+		requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.SubjectAltNameWarning)
+		requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
+		try:
+			r = requests.get(url, verify=playstation_ca)
+		except requests.exceptions.ConnectionError:
+			logging.warning('Connection to Sony cannot get verified')
+			r = requests.get(url, verify=False)
+
 		if r.status_code == HTTPStatus.OK:
 			# server wants to give us the whole file
 			f.seek(0)
