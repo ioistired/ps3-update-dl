@@ -1,20 +1,29 @@
-dist: bionic
-language: python
-jobs:
-  include:
-    - os: linux
-      services: docker
-      language: python
-env:
-  global:
-    - TWINE_USERNAME=__token__
-    # Note: TWINE_PASSWORD is set to a PyPI API token in Travis settings
-python:
-  - 3.7
-  - 3.8
-  - 3.9-dev
-install:
-  - python3 -m pip install -U setuptools pip wheel
-  - python3 -m pip install -e .[dev]
-script:
-  - python3 -m pytest tests.py
+{
+    "dist": "bionic",
+    "language": "python",
+    "jobs": {
+        "include": [{
+            "os": "linux",
+            "services": "docker",
+            "language": "python",
+        }]
+    },
+    "env": {
+        "global": [
+            "TWINE_USERNAME=__token__",
+            # Note: TWINE_PASSWORD is set to a PyPI API token in Travis settings
+        ]
+    },
+    "python": [
+        "3.7",
+        "3.8",
+        "3.9",
+    ],
+    "install": [
+        "python3 -m pip install -U setuptools pip wheel",
+        "python3 -m pip install -e .[dev]",
+    ],
+    "script": [
+        "python3 -m pytest tests.py",
+    ]
+}
