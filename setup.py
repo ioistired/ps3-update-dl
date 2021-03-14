@@ -7,7 +7,7 @@ from pathlib import Path
 
 HERE = Path(__file__).parent
 
-with open(HERE / 'ps3_update_dl.py') as f:
+with open(HERE / 'ps3_update_dl' / '__init__.py') as f:
 	VERSION = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
 
 if not VERSION:
@@ -21,7 +21,8 @@ setuptools.setup(
 	author='io mintz',
 	url='https://github.com/iomintz/ps3-update-dl',
 	version=VERSION,
-	py_modules=['ps3_update_dl'],
+	packages=['ps3_update_dl'],
+	package_data={'ps3_update_dl': ['*.crt']},
 	license='AGPLv3+',
 	description='Download all updates for a given PS3 game',
 	long_description=README,
