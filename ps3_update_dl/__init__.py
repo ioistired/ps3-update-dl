@@ -20,10 +20,12 @@ if TYPE_CHECKING:
 import requests
 from tqdm import tqdm
 
-# the PS3 update server uses a funky certificate but there's nothing we can do about that
 import warnings
 import urllib3.connection
+# the PS3 update server uses a funky certificate but there's nothing we can do about that
 warnings.filterwarnings('ignore', category=urllib3.connection.SubjectAltNameWarning)
+# the server also uses old ciphers, but some ciphers are better than none (issue #2)
+requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS = 'ALL:@SECLEVEL=1'
 
 class VerificationFailed(Exception):
 	"""verification of a downloaded update failed"""
