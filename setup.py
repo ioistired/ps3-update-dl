@@ -19,6 +19,7 @@ with open(HERE / 'README.md') as f:
 setuptools.setup(
 	name='ps3-update-dl',
 	author='io mintz',
+	author_email='io@mintz.cc',
 	url='https://github.com/iomintz/ps3-update-dl',
 	version=VERSION,
 	packages=['ps3_update_dl'],
