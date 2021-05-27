@@ -84,16 +84,26 @@ def _file_size(fp: typing.io.BinaryIO) -> int:
 	fp.seek(old_pos)
 	return size
 
-# unused for now as the PS3 servers seem to return incorrect hashes
-def _verify_hash(fp: typing.io.BinaryIO, update: Update) -> None:
+def _verify_hash(fp: typing.io.BinaryIO, filename: str, update: Update) -> None:
 	h = sha1()
+
+	# chop off last 32 bytes temporarily
+	fp.seek(-32, io.SEEK_END)
+	extra = fp.read()
+	fp.seek(-32, io.SEEK_END)
+	fp.truncate()
+
 	fp.seek(0)
 	for chunk in iter(lambda: fp.read(io.DEFAULT_BUFFER_SIZE), b''):
 		h.update(chunk)
+
+	# put those 32 bytes back
+	fp.seek(0, io.SEEK_END)
+	fp.write(extra)
+
 	if h.digest() != update.sha1sum:
-		raise VerificationFailed(
-			f'{path}: expected SHA-1 hash {update.sha1sum.hex()}, got {h.hexdigest()}', path, update,
-		)
+		print(f'{filename}: expected SHA-1 hash {update.sha1sum.hex()}, got {h.hexdigest()}')
+		sys.exit(3)
 
 def download_update(*, output_dir: Path, update: Update, overwrite=False):
 	output_path = output_dir / f'v{update.version} - {PurePosixPath(update.url).name}'
@@ -110,10 +120,10 @@ def download_update(*, output_dir: Path, update: Update, overwrite=False):
 
 	headers = {}
 	if downloaded < update.size:
-		mode = 'ab'
+		mode = 'a+b'
 		headers['Range'] = f'bytes={downloaded}-{update.size}'
 	else:
-		mode = 'wb'
+		mode = 'w+b'
 
 	with open(output_path, mode) as f:
 		r = session.get(update.url, headers=headers, stream=True)
@@ -134,6 +144,8 @@ def download_update(*, output_dir: Path, update: Update, overwrite=False):
 			bar.update(downloaded//1024)
 			for chunk in bar:
 				f.write(chunk)
+
+		_verify_hash(f, output_path.name, update)
 
 def download_updates(*, base_dir: Path, title_id: str, overwrite=False):
 	try:
