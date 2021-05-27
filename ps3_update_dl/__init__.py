@@ -161,10 +161,12 @@ def download_updates(*, base_dir: Path, title_id: str, overwrite=False):
 		download_update(output_dir=output_dir, update=update, overwrite=overwrite)
 
 USAGE = """\
-Usage: ps3udl [-c GAMES_YML_PATH] -o BASE_DIR TITLE_ID_1 [TITLE_ID_2...]
+Usage: ps3udl [-c GAMES_YML_PATH] -o BASE_DIR [TITLE_ID_1 TITLE_ID_2...]
 
 Download all updates for all given titles to the given base directory.
 A subdirectory inside the base directory will be created for each title.
+
+Titles are specified via command-line args or the games.yml file or both.
 
 Options:
 	-o BASE_DIR, --base-dir BASE_DIR

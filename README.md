@@ -17,20 +17,25 @@ Afterwards, the command will be available as `ps3udl`.
 ## Usage
 
 ```
-Usage: ps3udl -o BASE_DIR TITLE_ID_1 [TITLE_ID_2...]
+Usage: ps3udl [-c GAMES_YML_PATH] -o BASE_DIR [TITLE_ID_1 TITLE_ID_2...]
 
 Download all updates for all given titles to the given base directory.
 A subdirectory inside the base directory will be created for each title.
 
+Titles are specified via command-line args or the games.yml file or both.
+
 Options:
-    -o, --base-dir
-    The directory that all titles will be downloaded to. It must exist.
+	-o BASE_DIR, --base-dir BASE_DIR
+	The directory that all titles will be downloaded to. It must exist.
 
-    -f, --force
-    Whether to overwrite existing files.
+	-c GAMES_YML_PATH, --games-yml-path GAMES_YML_PATH
+	Path to your RPCS3 games.yml file. All updates for all games listed in this file will be downloaded if specified.
 
-    -h, --help
-    Display this message.
+	-f, --force
+	Whether to overwrite existing files.
+
+	-h, --help
+	Display this message.
 ```
 
 ## License
