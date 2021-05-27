@@ -41,6 +41,7 @@ else:
 
 session = requests.Session()
 session.verify = pkg_resources.resource_filename('ps3_update_dl', 'playstation-ca.crt')
+session.headers['User-Agent'] = f'{__name__}/{__version__} ' + session.headers['User-Agent']
 
 @dataclass
 class Update:
