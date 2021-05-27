@@ -68,7 +68,11 @@ def parse_updates(tree: et.ElementTree) -> Info:
 def download_info(title_id: str) -> Info:
 	r = session.get(URL_FORMAT.format(id=title_id))
 	r.raise_for_status()
-	return parse_updates(et.fromstring(r.text))
+	try:
+		return parse_updates(et.fromstring(r.text))
+	except et.ParseError as exc:
+		print('Could not parse response. No update available?', file=sys.stderr)
+		sys.exit(2)
 
 def _file_size(fp: typing.io.BinaryIO) -> int:
 	old_pos = fp.tell()
