@@ -4,6 +4,7 @@ __version__ = '0.1.0'
 
 import io
 import sys
+import yaml
 import typing
 import hashlib
 import pkg_resources
@@ -148,14 +149,17 @@ def download_updates(*, base_dir: Path, title_id: str, overwrite=False):
 		download_update(output_dir=output_dir, update=update, overwrite=overwrite)
 
 USAGE = """\
-Usage: ps3udl -o BASE_DIR TITLE_ID_1 [TITLE_ID_2...]
+Usage: ps3udl [-c GAMES_YML_PATH] -o BASE_DIR TITLE_ID_1 [TITLE_ID_2...]
 
 Download all updates for all given titles to the given base directory.
 A subdirectory inside the base directory will be created for each title.
 
 Options:
-	-o, --base-dir
+	-o BASE_DIR, --base-dir BASE_DIR
 	The directory that all titles will be downloaded to. It must exist.
+
+	-c GAMES_YML_PATH, --games-yml-path GAMES_YML_PATH
+	Path to your RPCS3 games.yml file. All updates for all games listed in this file will be downloaded if specified.
 
 	-f, --force
 	Whether to overwrite existing files.
@@ -169,11 +173,12 @@ def parse_args(args):
 
 	opts, args = getopt.gnu_getopt(
 		args,
-		'o:fh',
-		['base-dir', 'force', 'help'],
+		'o:c:fh',
+		['base-dir=', 'games-yml-path=', 'force', 'help'],
 	)
 	opts = dict(opts)
-	if not opts or not args or '-h' in opts or '--help' in opts:
+	games_yml_path = opts.get('-c', opts.get('--games-yml-path'))
+	if not opts or (not games_yml_path and not args) or '-h' in opts or '--help' in opts:
 		print(USAGE, file=sys.stderr)
 		sys.exit(0)
 
@@ -181,16 +186,26 @@ def parse_args(args):
 		print('Must specify exactly one of -o, --base-dir.', file=sys.stderr)
 		sys.exit(1)
 
+	if '--games-yml-path' in opts and '-c' in opts:
+		print('Can only specify one of --games-yml-path, -c.', file=sys.stderr)
+		sys.exit(1)
+
 	overwrite = '-f' in opts or '--force' in opts
 	base_dir = Path(opts.get('-o', opts.get('--base-dir')))
-	return dict(overwrite=overwrite, base_dir=base_dir, title_ids=args)
+	if games_yml_path is not None:
+		games_yml_path = Path(games_yml_path)
+	return dict(overwrite=overwrite, base_dir=base_dir, games_yml_path=games_yml_path, title_ids=args)
 
 def _main():
 	kwargs = parse_args(sys.argv[1:])
 	title_ids = kwargs.pop('title_ids')
+	games_yml_path = kwargs.pop('games_yml_path')
+	if games_yml_path is not None:
+		with games_yml_path.open() as games_yml:
+			title_ids.extend(yaml.safe_load(games_yml))
+
 	for title_id in title_ids:
 		download_updates(**kwargs, title_id=title_id)
-		print(file=sys.stderr)
 
 def main():
 	try:

@@ -30,6 +30,7 @@ setuptools.setup(
 	install_requires=[
 		'requests>=2.23.0,<3.0.0',
 		'tqdm>=4.49.0,<5.0.0',
+		'PyYAML>=5.4.1,<6.0.0',
 	],
 	extras_requires=[{'dev': ['pytest>=6.0.2,<7.0.0']}],
 	python_requires='>=3.7.0',
