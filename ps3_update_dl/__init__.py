@@ -69,7 +69,8 @@ def download_info(title_id: str) -> Info:
 	r = session.get(URL_FORMAT.format(id=title_id))
 	r.raise_for_status()
 	try:
-		return parse_updates(et.fromstring(r.text))
+		# r.content instead of r.text because the server doesn't declare an encoding, but the XML does
+		return parse_updates(et.fromstring(r.content))
 	except et.ParseError as exc:
 		print('Could not parse response. No update available?', file=sys.stderr)
 		sys.exit(2)
